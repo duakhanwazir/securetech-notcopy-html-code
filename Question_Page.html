@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Animated Quiz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #5649c5;
+            --secondary: #a29bfe;
+            --accent: #fd79a8;
+            --accent-dark: #e84393;
+            --light: #f8f9fa;
+            --dark: #2d3436;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+            --glass: rgba(255, 255, 255, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Floating particles background */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--glass);
+            border-radius: 50%;
+            filter: blur(2px);
+            animation: float linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 1; }
+            50% { transform: translateY(-100vh) translateX(100px); opacity: 0.5; }
+            100% { transform: translateY(-200vh) translateX(-100px); opacity: 0; }
+        }
+        
+        /* Main container */
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            z-index: 2;
+            animation: fadeInUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                45deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                transparent 100%
+            );
+            transform: translateX(-100%);
+            animation: shine 6s infinite 1s;
+        }
+        
+        @keyframes shine {
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Ultra realistic watch timer */
+        .watch-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            perspective: 1000px;
+        }
+        
+        .watch {
+            background: #111;
+            border-radius: 50%;
+            width: 180px;
+            height: 180px;
+            position: relative;
+            box-shadow: 
+                0 0 0 10px rgba(0, 0, 0, 0.5),
+                0 0 0 15px rgba(255, 255, 255, 0.05),
+                0 15px 35px rgba(0, 0, 0, 0.5),
+                inset 0 5px 15px rgba(0, 0, 0, 0.3),
+                inset 0 -5px 15px rgba(255, 255, 255, 0.05);
+            transform-style: preserve-3d;
+            animation: watchFloat 4s ease-in-out infinite;
+        }
+        
+        @keyframes watchFloat {
+            0%, 100% { transform: translateY(0) rotateX(5deg); }
+            50% { transform: translateY(-10px) rotateX(-5deg); }
+        }
+        
+        .watch-face {
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            background: #050505;
+            border-radius: 50%;
+            top: 5%;
+            left: 5%;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .watch-face::before {
+            content: '';
+            position: absolute;
+            width: 92%;
+            height: 92%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .watch-face::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            z-index: 11;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        
+        .watch-brand {
+            position: absolute;
+            top: 30%;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.7rem;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 10;
+        }
+        
+        .time {
+            font-family: 'Orbitron', sans-serif;
+            color: #0ff;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            position: relative;
+            z-index: 10;
+            animation: timeGlow 2s infinite alternate;
+        }
+        
+        @keyframes timeGlow {
+            0% { text-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
+            100% { text-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.4); }
+        }
+        
+        .watch-hands {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        
+        .hand {
+            position: absolute;
+            background: #fff;
+            border-radius: 5px;
+            transform-origin: bottom center;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hour-hand {
+            width: 4px;
+            height: 40px;
+            top: 30%;
+            left: calc(50% - 2px);
+            background: #f00;
+            z-index: 8;
+        }
+        
+        .minute-hand {
+            width: 3px;
+            height: 60px;
+            top: 20%;
+            left: calc(50% - 1.5px);
+            background: #0f0;
+            z-index: 9;
+        }
+        
+        .second-hand {
+            width: 2px;
+            height: 70px;
+            top: 15%;
+            left: calc(50% - 1px);
+            background: #0ff;
+            z-index: 10;
+        }
+        
+        /* Question styling */
+        .question-container {
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+        
+        .question {
+            font-size: 1.5rem;
+            color: var(--light);
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.5;
+            font-weight: 600;
+            padding: 20px;
+            background: var(--glass);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(5px);
+        }
+        
+        .question::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff);
+            z-index: -1;
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        
+        .question:hover::before {
+            opacity: 0.3;
+        }
+        
+        /* Options styling */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .option {
+            position: relative;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+        
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                transparent 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                transparent 100%
+            );
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .option:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--light);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .option label::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            margin-right: 15px;
+            transition: all 0.4s ease;
+            background: transparent;
+        }
+        
+        .option input:checked ~ label::before {
+            border-color: var(--accent);
+            background-color: var(--accent);
+            box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.2), 0 0 10px var(--accent);
+        }
+        
+        .option.selected {
+            background: rgba(253, 121, 168, 0.15);
+            border-color: var(--accent);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(253, 121, 168, 0.3);
+        }
+        
+        .option.selected::before {
+            transform: translateX(100%);
+        }
+        
+        .option.selected label::before {
+            border-color: var(--accent);
+            background-color: var(--accent);
+            box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.2), 0 0 15px var(--accent);
+            animation: pulseCheck 0.6s ease;
+        }
+        
+        @keyframes pulseCheck {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Submit button */
+        .submit-container {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .submit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 220px;
+            padding: 18px;
+            background: linear-gradient(45deg, var(--accent-dark), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 
+                0 5px 15px rgba(253, 121, 168, 0.4),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                45deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                transparent 100%
+            );
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 25px rgba(253, 121, 168, 0.6),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+        
+        .submit-btn:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .submit-btn:disabled {
+            background: linear-gradient(45deg, #636e72, #b2bec3);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .submit-btn:disabled::before {
+            display: none;
+        }
+        
+        /* Confetti effect */
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            overflow: hidden;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #f00;
+            opacity: 0;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
+            .question {
+                font-size: 1.3rem;
+                padding: 15px;
+            }
+            
+            .option {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="confetti-container" id="confetti-container"></div>
+        
+        <div class="watch-container">
+            <div class="watch">
+                <div class="watch-face">
+                    <div class="watch-brand">Chronometer</div>
+                    <div class="time" id="time">07:00</div>
+                    <div class="watch-hands">
+                        <div class="hand hour-hand"></div>
+                        <div class="hand minute-hand"></div>
+                        <div class="hand second-hand"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="question-container">
+            <div class="question">
+                Which of these programming languages was created first?
+            </div>
+        </div>
+        
+        <div class="options">
+            <div class="option">
+                <input type="radio" id="option1" name="quiz" value="1">
+                <label for="option1">Python (1991)</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="option2" name="quiz" value="2">
+                <label for="option2">JavaScript (1995)</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="option3" name="quiz" value="3">
+                <label for="option3">Java (1995)</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="option4" name="quiz" value="4">
+                <label for="option4">C (1972)</label>
+            </div>
+            <div class="option">
+                <input type="radio" id="option5" name="quiz" value="5">
+                <label for="option5">Ruby (1995)</label>
+            </div>
+        </div>
+        
+        <div class="submit-container">
+            <button class="submit-btn" id="submitBtn" disabled>
+                <span class="btn-text">Submit Answer</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random size between 5px and 15px
+            const size = Math.random() * 10 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random position
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            // Random animation duration between 10s and 30s
+            const duration = Math.random() * 20 + 10;
+            particle.style.animationDuration = `${duration}s`;
+            
+            // Random delay
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Realistic watch timer countdown from 7 minutes
+        let totalSeconds = 7 * 60;
+        const timeElement = document.getElementById('time');
+        const hourHand = document.querySelector('.hour-hand');
+        const minuteHand = document.querySelector('.minute-hand');
+        const secondHand = document.querySelector('.second-hand');
+        
+        function updateWatch() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            // Update digital display
+            timeElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update watch hands
+            const hoursDegrees = ((minutes / 60) * 360) + 90;
+            const minsDegrees = ((minutes % 60) / 60) * 360 + 90;
+            const secsDegrees = ((seconds % 60) / 60) * 360 + 90;
+            
+            hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+            minuteHand.style.transform = `rotate(${minsDegrees}deg)`;
+            secondHand.style.transform = `rotate(${secsDegrees}deg)`;
+            
+            // Change color when time is running out
+            if (totalSeconds <= 60) {
+                timeElement.style.color = '#ff5555';
+                timeElement.style.textShadow = '0 0 10px rgba(255, 85, 85, 0.8)';
+                document.querySelector('.watch-face').style.boxShadow = 'inset 0 0 20px rgba(255, 0, 0, 0.5)';
+                document.querySelector('.second-hand').style.background = '#ff5555';
+            } else if (totalSeconds <= 180) {
+                timeElement.style.color = '#ffff55';
+                timeElement.style.textShadow = '0 0 10px rgba(255, 255, 85, 0.8)';
+                document.querySelector('.second-hand').style.background = '#ffff55';
+            }
+            
+            if (totalSeconds <= 0) {
+                clearInterval(timerInterval);
+                timeElement.textContent = '00:00';
+                document.getElementById('submitBtn').click();
+            } else {
+                totalSeconds--;
+            }
+        }
+        
+        // Start the timer immediately
+        updateWatch();
+        const timerInterval = setInterval(updateWatch, 1000);
+        
+        // Option selection - only allow one selection
+        const options = document.querySelectorAll('.option');
+        let selectedOption = null;
+        
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                // If an option is already selected, ignore new selections
+                if (selectedOption !== null) return;
+                
+                // Mark this option as selected
+                selectedOption = this;
+                this.classList.add('selected');
+                this.style.pointerEvents = 'none';
+                
+                // Disable all other options
+                options.forEach(opt => {
+                    if (opt !== this) {
+                        opt.style.opacity = '0.6';
+                        opt.style.pointerEvents = 'none';
+                        opt.style.transform = 'scale(0.98)';
+                    }
+                });
+                
+                // Enable submit button
+                document.getElementById('submitBtn').disabled = false;
+                
+                // Add micro-interaction
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                }, 10);
+            });
+        });
+        
+        // Submit button with confetti effect
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.addEventListener('click', function() {
+            if (this.disabled) return;
+            
+            // Disable button during submission
+            this.disabled = true;
+            this.innerHTML = '<span class="btn-text">Submitting...</span>';
+            
+            // Create confetti effect
+            createConfetti();
+            
+            // Simulate submission
+            setTimeout(() => {
+                this.innerHTML = '<span class="btn-text">Submitted!</span>';
+                this.style.background = 'linear-gradient(45deg, var(--success), #55ff55)';
+                
+                // Stop the timer
+                clearInterval(timerInterval);
+            }, 1500);
+        });
+        
+        // Confetti effect function
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confetti-container');
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random properties
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 10 + 5;
+                const shape = Math.random() > 0.5 ? '50%' : '0';
+                
+                confetti.style.backgroundColor = color;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.borderRadius = shape;
+                
+                // Random position
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.top = `-10px`;
+                
+                // Random animation
+                const animationDuration = Math.random() * 3 + 2;
+                const animationDelay = Math.random() * 2;
+                
+                confetti.style.animation = `confettiFall ${animationDuration}s ease-in ${animationDelay}s forwards`;
+                
+                // Add to container
+                confettiContainer.appendChild(confetti);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, (animationDuration + animationDelay) * 1000);
+            }
+            
+            // Add CSS for confetti fall
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes confettiFall {
+                    0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 1; }
+                    100% { transform: translateY(100vh) rotate(360deg) translateX(${Math.random() > 0.5 ? '' : '-'}${Math.random() * 200}px); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+</body>
+</html>
