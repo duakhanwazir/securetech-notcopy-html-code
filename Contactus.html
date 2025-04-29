@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Contact Card</title>
+    <title>Hyper-Animated Contact Card</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
         * {
             margin: 0;
@@ -21,23 +21,41 @@
             min-height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             overflow: hidden;
+            perspective: 1000px;
+        }
+        
+        .contact-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .contact-card {
             position: relative;
-            width: 350px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            width: 380px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px);
+            border-radius: 30px;
             padding: 40px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-right: 1px solid rgba(255, 255, 255, 0.1);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             overflow: hidden;
-            animation: fadeIn 0.8s ease-out, float 6s ease-in-out infinite;
+            animation: cardEntrance 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+                       float 8s ease-in-out infinite 1.2s,
+                       subtleTilt 12s ease-in-out infinite 1.2s;
             transform-style: preserve-3d;
-            transform: perspective(1000px);
+            z-index: 10;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.3);
         }
         
         .contact-card::before {
@@ -47,97 +65,127 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            transform: skewX(-15deg);
-            transition: 0.5s;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
         
         .contact-card:hover::before {
             left: 120%;
         }
         
+        .contact-card::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+            z-index: -1;
+        }
+        
         .contact-card h2 {
             color: #fff;
-            font-size: 24px;
-            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 40px;
             position: relative;
             text-align: center;
-            animation: textGlow 2s infinite alternate;
+            animation: textGlow 3s infinite alternate,
+                       textFloat 5s ease-in-out infinite;
+        }
+        
+        .contact-card h2::before {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #f6d365 0%, #fda085 100%);
+            border-radius: 4px;
+            animation: linePulse 3s infinite;
         }
         
         .contact-card h2::after {
-            content: '';
+            content: '✉️';
             position: absolute;
-            bottom: -10px;
+            top: -40px;
             left: 50%;
             transform: translateX(-50%);
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(90deg, #f6d365 0%, #fda085 100%);
-            border-radius: 3px;
+            font-size: 40px;
+            animation: envelopeFloat 4s ease-in-out infinite;
         }
         
         .input-group {
             position: relative;
-            margin-bottom: 30px;
-            animation: slideIn 0.5s ease-out backwards;
-            animation-delay: 0.3s;
+            margin-bottom: 35px;
+            animation: inputEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
         }
         
         .input-group:nth-child(2) {
-            animation-delay: 0.5s;
+            animation-delay: 0.2s;
         }
         
         .input-group:nth-child(3) {
-            animation-delay: 0.7s;
+            animation-delay: 0.4s;
         }
         
         .input-group input,
         .input-group textarea {
             width: 100%;
-            padding: 15px 20px;
+            padding: 18px 25px;
             outline: none;
             border: none;
-            border-radius: 35px;
+            border-radius: 40px;
             font-size: 16px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             color: #fff;
-            transition: all 0.5s;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(5px);
         }
         
         .input-group textarea {
             resize: none;
-            min-height: 100px;
-            border-radius: 20px;
+            min-height: 120px;
+            border-radius: 25px;
         }
         
         .input-group input:focus,
         .input-group textarea:focus {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+            animation: inputFocusGlow 2s infinite;
         }
         
         .input-group input::placeholder,
         .input-group textarea::placeholder {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s;
+        }
+        
+        .input-group input:focus::placeholder,
+        .input-group textarea:focus::placeholder {
+            opacity: 0.5;
+            transform: translateX(5px);
         }
         
         .input-group label {
             position: absolute;
-            top: -15px;
-            left: 20px;
+            top: -12px;
+            left: 25px;
             font-size: 14px;
             color: #fff;
             background: linear-gradient(90deg, #f6d365 0%, #fda085 100%);
-            padding: 5px 10px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(253, 160, 133, 0.3);
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: -1;
         }
         
         .input-group input:focus + label,
@@ -145,35 +193,37 @@
         .input-group input:not(:placeholder-shown) + label,
         .input-group textarea:not(:placeholder-shown) + label {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
+            z-index: 1;
         }
         
         .btn {
             position: relative;
             display: inline-block;
-            padding: 15px 30px;
+            padding: 18px 30px;
             background: linear-gradient(90deg, #f6d365 0%, #fda085 100%);
             color: #fff;
             border: none;
-            border-radius: 35px;
+            border-radius: 40px;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 30px rgba(253, 160, 133, 0.3);
             width: 100%;
-            transition: all 0.3s;
-            animation: pulse 2s infinite;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: btnPulse 3s infinite, btnFloat 4s ease-in-out infinite;
+            z-index: 1;
         }
         
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(253, 160, 133, 0.4);
             animation: none;
         }
         
         .btn:active {
-            transform: translateY(-1px);
+            transform: translateY(-2px) scale(0.99);
         }
         
         .btn::before {
@@ -184,192 +234,308 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: 0.5s;
+            transition: 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
         
         .btn:hover::before {
             left: 100%;
         }
         
-        /* Animations */
-        @keyframes fadeIn {
-            from {
+        .btn::after {
+            content: '→';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .btn:hover::after {
+            right: 30px;
+            opacity: 1;
+        }
+        
+        /* Particle background */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            filter: blur(2px);
+            animation: floatParticle linear infinite;
+        }
+        
+        /* Floating shapes */
+        .floating-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: floatShape linear infinite;
+        }
+        
+        .shape:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            background: #f6d365;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            top: 10%;
+            left: 15%;
+            animation-duration: 25s;
+            animation-delay: 0s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            background: #fda085;
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            top: 60%;
+            left: 70%;
+            animation-duration: 30s;
+            animation-delay: 5s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            background: #a18cd1;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 60%;
+            top: 30%;
+            left: 80%;
+            animation-duration: 20s;
+            animation-delay: 10s;
+        }
+        
+        /* Keyframe Animations */
+        @keyframes cardEntrance {
+            0% {
                 opacity: 0;
-                transform: translateY(20px) perspective(1000px) rotateX(10deg);
+                transform: translateY(100px) rotateX(30deg) rotateY(-10deg) scale(0.8);
+                filter: blur(10px);
             }
-            to {
+            100% {
                 opacity: 1;
-                transform: translateY(0) perspective(1000px) rotateX(0);
+                transform: translateY(0) rotateX(0) rotateY(0) scale(1);
+                filter: blur(0);
             }
         }
         
         @keyframes float {
             0%, 100% {
-                transform: translateY(0) perspective(1000px) rotateX(0) rotateY(0);
+                transform: translateY(0) rotateX(0) rotateY(0);
             }
             50% {
-                transform: translateY(-10px) perspective(1000px) rotateX(2deg) rotateY(2deg);
+                transform: translateY(-15px) rotateX(3deg) rotateY(3deg);
             }
         }
         
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
+        @keyframes subtleTilt {
+            0%, 100% {
+                transform: rotateZ(0deg);
             }
-            to {
+            25% {
+                transform: rotateZ(0.5deg);
+            }
+            75% {
+                transform: rotateZ(-0.5deg);
+            }
+        }
+        
+        @keyframes textGlow {
+            0% {
+                text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(253, 160, 133, 0.6);
+            }
+        }
+        
+        @keyframes textFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        @keyframes linePulse {
+            0%, 100% {
+                width: 60px;
+                opacity: 1;
+            }
+            50% {
+                width: 80px;
+                opacity: 0.8;
+            }
+        }
+        
+        @keyframes envelopeFloat {
+            0%, 100% {
+                transform: translate(-50%, 0) rotate(0deg);
+            }
+            50% {
+                transform: translate(-50%, -10px) rotate(5deg);
+            }
+        }
+        
+        @keyframes inputEntrance {
+            0% {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            100% {
                 opacity: 1;
                 transform: translateX(0);
             }
         }
         
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(253, 160, 133, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(253, 160, 133, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(253, 160, 133, 0);
-            }
-        }
-        
-        @keyframes textGlow {
-            from {
-                text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-            }
-            to {
-                text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
-            }
-        }
-        
-        /* Floating bubbles background */
-        .bubbles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            top: 0;
-            left: 0;
-        }
-        
-        .bubble {
-            position: absolute;
-            bottom: -100px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: rise 15s infinite ease-in;
-        }
-        
-        .bubble:nth-child(1) {
-            width: 40px;
-            height: 40px;
-            left: 10%;
-            animation-duration: 8s;
-        }
-        
-        .bubble:nth-child(2) {
-            width: 20px;
-            height: 20px;
-            left: 20%;
-            animation-duration: 5s;
-            animation-delay: 1s;
-        }
-        
-        .bubble:nth-child(3) {
-            width: 50px;
-            height: 50px;
-            left: 35%;
-            animation-duration: 7s;
-            animation-delay: 2s;
-        }
-        
-        .bubble:nth-child(4) {
-            width: 80px;
-            height: 80px;
-            left: 50%;
-            animation-duration: 11s;
-            animation-delay: 0s;
-        }
-        
-        .bubble:nth-child(5) {
-            width: 35px;
-            height: 35px;
-            left: 55%;
-            animation-duration: 6s;
-            animation-delay: 1s;
-        }
-        
-        .bubble:nth-child(6) {
-            width: 45px;
-            height: 45px;
-            left: 65%;
-            animation-duration: 8s;
-            animation-delay: 3s;
-        }
-        
-        .bubble:nth-child(7) {
-            width: 25px;
-            height: 25px;
-            left: 75%;
-            animation-duration: 7s;
-            animation-delay: 2s;
-        }
-        
-        .bubble:nth-child(8) {
-            width: 80px;
-            height: 80px;
-            left: 80%;
-            animation-duration: 6s;
-            animation-delay: 1s;
-        }
-        
-        @keyframes rise {
-            0% {
-                bottom: -100px;
-                transform: translateX(0);
+        @keyframes inputFocusGlow {
+            0%, 100% {
+                box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
             }
             50% {
-                transform: translateX(100px);
+                box-shadow: 0 12px 30px rgba(253, 160, 133, 0.3);
+            }
+        }
+        
+        @keyframes btnPulse {
+            0%, 100% {
+                box-shadow: 0 15px 30px rgba(253, 160, 133, 0.3);
+            }
+            50% {
+                box-shadow: 0 15px 40px rgba(253, 160, 133, 0.5);
+            }
+        }
+        
+        @keyframes btnFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
             }
             100% {
-                bottom: 1080px;
-                transform: translateX(-200px);
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes floatShape {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(50px, 50px) rotate(90deg);
+            }
+            50% {
+                transform: translate(100px, 0) rotate(180deg);
+            }
+            75% {
+                transform: translate(50px, -50px) rotate(270deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .contact-card {
+                width: 90%;
+                padding: 30px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="bubbles">
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
+    <div class="contact-container">
+        <!-- Floating background shapes -->
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+        
+        <!-- Particle background -->
+        <div class="particles" id="particles"></div>
+        
+        <!-- Main contact card -->
+        <div class="contact-card">
+            <h2>Contact Us</h2>
+            <form>
+                <div class="input-group">
+                    <input type="text" placeholder="Your Name" required>
+                    <label>Your Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" placeholder="Contact Email" required>
+                    <label>Contact Email</label>
+                </div>
+                <div class="input-group">
+                    <textarea placeholder="Your Message" required></textarea>
+                    <label>Your Message</label>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </div>
     </div>
-    
-    <div class="contact-card">
-        <h2>Contact Us</h2>
-        <form>
-            <div class="input-group">
-                <input type="text" placeholder="Your Name" required>
-                <label>Your Name</label>
-            </div>
-            <div class="input-group">
-                <input type="email" placeholder="Contact Email" required>
-                <label>Contact Email</label>
-            </div>
-            <div class="input-group">
-                <textarea placeholder="Your Message" required></textarea>
-                <label>Your Message</label>
-            </div>
-            <button type="submit" class="btn">Send Message</button>
-        </form>
-    </div>
+
+    <script>
+        // Generate particles
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 30;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random properties
+            const size = Math.random() * 5 + 2;
+            const posX = Math.random() * 100;
+            const duration = Math.random() * 20 + 10;
+            const delay = Math.random() * 10;
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${posX}%`;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.animationDelay = `${delay}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+    </script>
 </body>
 </html>
